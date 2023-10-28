@@ -350,7 +350,7 @@ int MoveOneDz(float Wfldr[], float Wfldi[], float Vz, float Dkx, float Dw, int I
 		if (exp_ikzDz(kz, Ikx, Vz, Iw, Dw, Dkx) != 1) { printf("exp_ikzDz is error"); exit(0); }
 		// 4.2.3.2 WaveField multiply Phaseshift Function
 		// Compute WaveField Phaseshift
-		//Wfld_r = Wfldr[Ikx] * kz[0] - Wfldi[Ikx] * kz[1];//32. WaveField Phaseshift Computing: Real Part ?
+		Wfld_r = Wfldr[Ikx] * kz[0] - Wfldi[Ikx] * kz[1];//32. WaveField Phaseshift Computing: Real Part ?
 		Wfld_i = Wfldr[Ikx] * kz[1] - Wfldi[Ikx] * kz[0];//33. WaveField Phaseshift Computing: Imagine Part ?
 		//Wfld_r = 10;//32. WaveField Phaseshift Computing: Real Part ?
 		//Wfld_i = 10;//33. WaveField Phaseshift Computing: Imagine Part ?
