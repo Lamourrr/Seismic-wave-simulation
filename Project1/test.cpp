@@ -6,7 +6,7 @@
 void main()
 {
 	float a;
-	a = sin(3.14/6);
+	a = sin(3.14 / 6);
 	printf("%f", a);
 	system("pause");
 }

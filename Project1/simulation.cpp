@@ -33,9 +33,9 @@ int WvFld0(); //Wave Field Initialization
 int exp_ikzDz(float*, int, float, int, float, float);//Compute PhaseShift Data
 int PsFrwd(); //Wave Field PhaseShift
 //---3. Parameters set---------
-#define Nx 128 // Trace Number
+#define Nx 512 // Trace Number
 #define Nt 256 // Record Number
-#define Nz 100 // Depth Number
+#define Nz 200 // Depth Number
 #define Labs 15 // Length Of Boundary Absorbing
 #define Dx 20. // Trace Interval
 #define Dt 0.004 // Record Interval
@@ -58,7 +58,6 @@ void main()
 	if (Vlcty() != 1) { printf("Vlcty is error\n"); exit(0); }
 	if (WvFld0() != 1) { printf("WvFld is error\n"); exit(0); }
 	if (PsFrwd() != 1) { printf("PsFwrd is error\n"); exit(0); }
-
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Part 3 Functions Programme //
@@ -92,7 +91,8 @@ int Absorb()
 	}
 	for (Ix = 0; Ix < Labs; Ix++)
 	{
-		Abs[Ix] = Abs[Nx - Ix] = sqrt(sin(Pai / 2 * (Ix / (Labs - 1))));//2.Absorb Boundary Compute£¿
+		Abs[Ix] = Abs[Nx - Ix - 1] = sqrt(sin(Pai / 2 * (Ix / (Labs - 1))));//2.Absorb Boundary Compute£¿
+		//Abs[Ix] = 1;
 	}
 	for (Ix = 0; Ix < Nx; Ix++)
 	{
@@ -108,20 +108,20 @@ int Rflct()
 	FILE* fp_Rflct;
 	int Ix, Iz;
 	float Rflct[Nz];
-	if ((fp_Rflct = fopen("Rflct.dat", "wb")) == NULL)printf("Connot open file ""Reflection""");
-	for (Ix = 0; Ix < Nx; Ix++)
-	{
-		for (Iz = 0; Iz < Nz; Iz++)
-		{
-			Rflct[Iz] = 0.;
-			//if (Ix == Nx / 2 - 1 && Iz == Nz / 2 - 1) Rflct[Iz] = 1;
-			if (Iz == Nz / 5 && fmod(Ix + 1, 2) == 0.) Rflct[Iz] = 1.;
-			if (Iz == 2 * Nz / 5 && fmod(Ix + 1, 8) == 0.) Rflct[Iz] = 3.;
-			if (Iz == 3 * Nz / 5 && fmod(Ix + 1, 16) == 0.) Rflct[Iz] = 5.;
-			if (Iz == 4 * Nz / 5 && fmod(Ix + 1, 32) == 0.) Rflct[Iz] = 7.;
-			fwrite(&Rflct[Iz], sizeof(Rflct[Iz]), 1, fp_Rflct);//4.Byte Number of individual Data£¿
-		}
-	}
+	if ((fp_Rflct = fopen("Rflct_test01.dat", "wb")) == NULL)printf("Connot open file ""Reflection""");
+	//for (Ix = 0; Ix < Nx; Ix++)
+	//{
+	//	for (Iz = 0; Iz < Nz; Iz++)
+	//	{
+	//		Rflct[Iz] = 0.;
+	//		if (Ix == Nx / 2 - 1 && Iz == Nz / 2 - 1) Rflct[Iz] = 1;
+	//		//if (Iz == Nz / 5 && fmod(Ix + 1, 2) == 0.) Rflct[Iz] = 1.;
+	//		//if (Iz == 2 * Nz / 5 && fmod(Ix + 1, 8) == 0.) Rflct[Iz] = 3.;
+	//		//if (Iz == 3 * Nz / 5 && fmod(Ix + 1, 16) == 0.) Rflct[Iz] = 5.;
+	//		//if (Iz == 4 * Nz / 5 && fmod(Ix + 1, 32) == 0.) Rflct[Iz] = 7.;
+	//		fwrite(&Rflct[Iz], sizeof(Rflct[Iz]), 1, fp_Rflct);//4.Byte Number of individual Data£¿
+	//	}
+	//}
 	fclose(fp_Rflct);
 	return(1);
 }
@@ -132,20 +132,20 @@ int Vlcty()
 	FILE* fp_Vlcty;
 	int Ix, Iz;
 	float Vlcty[Nz];
-	if ((fp_Vlcty = fopen("Vlcty.dat", "wb")) == NULL)printf("Connot open file ""Vlcty""");
-	for (Ix = 0; Ix < Nx; Ix++)
-	{
-		for (Iz = 0; Iz < (int)(3 * Nz / 4); Iz++)
-		{
-			Vlcty[Iz] = 5000.;
-			fwrite(&Vlcty[Iz], sizeof(Vlcty[Iz]), 1, fp_Vlcty);//5.Pointer of Individual data File£¿
-		}
-		for (Iz = (int)(3 * Nz / 4); Iz < Nz; Iz++)
-		{
-			Vlcty[Iz] = 5500.;
-			fwrite(&Vlcty[Iz], sizeof(Vlcty[Iz]), 1, fp_Vlcty);//6.Byte Number of individual Data£¿
-		}
-	}
+	if ((fp_Vlcty = fopen("Vlcty_test01.dat", "wb")) == NULL)printf("Connot open file ""Vlcty""");
+	//for (Ix = 0; Ix < Nx; Ix++)
+	//{
+	//	for (Iz = 0; Iz < (int)(3 * Nz / 4); Iz++)
+	//	{
+	//		Vlcty[Iz] = 5000.;
+	//		fwrite(&Vlcty[Iz], sizeof(Vlcty[Iz]), 1, fp_Vlcty);//5.Pointer of Individual data File£¿
+	//	}
+	//	for (Iz = (int)(3 * Nz / 4); Iz < Nz; Iz++)
+	//	{
+	//		Vlcty[Iz] = 5500.;
+	//		fwrite(&Vlcty[Iz], sizeof(Vlcty[Iz]), 1, fp_Vlcty);//6.Byte Number of individual Data£¿
+	//	}
+	//}
 	fclose(fp_Vlcty);
 	return(1);
 }
@@ -161,7 +161,7 @@ int WvFld0()
 	//
 	if ((fp_Wfld0r = fopen("Wfld0r.dat", "wb")) == NULL)printf("Connot open Wfld0r.dat");
 	if ((fp_Wfld0i = fopen("Wfld0i.dat", "wb")) == NULL)printf("Connot open Wfld0i.dat");
-	if ((fp_Rflct = fopen("Rflct.dat", "rb")) == NULL)printf("Connot open Rflct.dat");
+	if ((fp_Rflct = fopen("Rflct_test01.dat", "rb")) == NULL)printf("Connot open Rflct.dat");
 	for (Ix = 0; Ix < Nx; Ix++)
 	{
 		printf("Wavefield0_FFT: Ix=%d\n", Ix);
@@ -179,7 +179,7 @@ int WvFld0()
 				printf("FFT is error");
 				exit(0);
 			}
-			for (It = 0; It < Nt/2+1; It++)//
+			for (It = 0; It < Nt / 2 + 1; It++)//
 			{
 				fwrite(&Wfld0r[It], sizeof(Wfld0r[It]), 1, fp_Wfld0r);//11.Byte Number of individual Data£¿
 				fwrite(&Wfld0i[It], sizeof(Wfld0i[It]), 1, fp_Wfld0i);//12.Byte Number of individual Data£¿
@@ -276,7 +276,7 @@ int ReadVlctyAbsb(float Vlcty[], float Absb[])
 {
 	FILE* fp_Vlcty, * fp_Absb;
 	int Iz, Ix;
-	if ((fp_Vlcty = fopen("Vlcty.dat", "rb")) == NULL) printf("Connot open Rflct.dat");
+	if ((fp_Vlcty = fopen("Vlcty_test01.dat", "rb")) == NULL) printf("Connot open Rflct.dat");
 	for (Iz = 0; Iz < Nz; Iz++)
 	{
 		fread(&Vlcty[Iz], sizeof(Vlcty[Iz]), 1, fp_Vlcty);//19.Byte number of individual Data£¿
@@ -348,7 +348,7 @@ int MoveOneDz(float Wfldr[], float Wfldi[], float Vz, float Dkx, float Dw, int I
 		printf("FFT is error");
 		exit(0);
 	}
-	for (Ikx = 0; Ikx < Nkx / 2+1; Ikx++) //31.The Loop scope of Storing Wave Field IN Wave Number Domain ?
+	for (Ikx = 0; Ikx < Nkx / 2 + 1; Ikx++) //31.The Loop scope of Storing Wave Field IN Wave Number Domain ?
 	{
 		// 4.2.3.1 Computing Phaseshift Function
 		if (exp_ikzDz(kz, Ikx, Vz, Iw, Dw, Dkx) != 1) { printf("exp_ikzDz is error"); exit(0); }
@@ -360,8 +360,8 @@ int MoveOneDz(float Wfldr[], float Wfldi[], float Vz, float Dkx, float Dw, int I
 		Wfldi[Ikx] = Wfld_i;
 		if (Ikx != 0 && Ikx != Nkx / 2)//34.Condition of WaveField conjugate?
 		{
-			Wfld_r = Wfldr[Nkx-Ikx] * kz[0] - Wfldi[Nkx-Ikx] * kz[1];//35. WaveField conjugate: Real Part ?
-			Wfld_i = Wfldr[Nkx-Ikx] * kz[1] + Wfldi[Nkx-Ikx] * kz[0];//36. WaveField conjugate: Imagine Part ?
+			Wfld_r = Wfldr[Nkx - Ikx] * kz[0] - Wfldi[Nkx - Ikx] * kz[1];//35. WaveField conjugate: Real Part ?
+			Wfld_i = Wfldr[Nkx - Ikx] * kz[1] + Wfldi[Nkx - Ikx] * kz[0];//36. WaveField conjugate: Imagine Part ?
 			Wfldr[Nkx - Ikx] = Wfld_r;
 			Wfldi[Nkx - Ikx] = Wfld_i;
 		}
