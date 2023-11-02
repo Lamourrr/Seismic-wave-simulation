@@ -58,6 +58,7 @@ void main()
 	if (Vlcty() != 1) { printf("Vlcty is error\n"); exit(0); }
 	if (WvFld0() != 1) { printf("WvFld is error\n"); exit(0); }
 	if (PsFrwd() != 1) { printf("PsFwrd is error\n"); exit(0); }
+
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Part 3 Functions Programme //
@@ -326,9 +327,9 @@ int ReadIxIzIwToIwIzIx(FILE* fp_Wfld0r, FILE* fp_Wfld0i, float Wfld0r[], float W
 		// Data Numbers From start Position To Current Position
 		AddfrmStrt = (Ix * Nz + Iz) * (Nw / 2 + 1) + Iw;//25.Data number From Its File Head?
 		// Byte Numbers From start Position To Current Position
-		fseek(fp_Wfld0r, sizeof(fp_Wfld0r) * AddfrmStrt, 0);//26. Byte number of Individual Data ?
+		fseek(fp_Wfld0r, sizeof(Wfld0r[Ix]) * AddfrmStrt, 0);//26. Byte number of Individual Data ?
 		fread(&Wfld0r[Ix], sizeof(Wfld0r[Ix]), 1, fp_Wfld0r); //27. Byte number of Individual Data ?
-		fseek(fp_Wfld0i, sizeof(fp_Wfld0i) * AddfrmStrt, 0);//28. Byte number of Individual Data ?
+		fseek(fp_Wfld0i, sizeof(Wfld0i[Ix]) * AddfrmStrt, 0);//28. Byte number of Individual Data ?
 		fread(&Wfld0i[Ix], sizeof(Wfld0i[Ix]), 1, fp_Wfld0i); //29. Byte number of Individual Data ?
 	}
 	return(1);
@@ -346,20 +347,20 @@ int MoveOneDz(float Wfldr[], float Wfldi[], float Vz, float Dkx, float Dw, int I
 		printf("FFT is error");
 		exit(0);
 	}
-	for (Ikx = 0; Ikx < Nkx / 2 - 1; Ikx++) //31.The Loop scope of Storing Wave Field IN Wave Number Domain ?
+	for (Ikx = 0; Ikx < Nkx / 2+1; Ikx++) //31.The Loop scope of Storing Wave Field IN Wave Number Domain ?
 	{
 		// 4.2.3.1 Computing Phaseshift Function
 		if (exp_ikzDz(kz, Ikx, Vz, Iw, Dw, Dkx) != 1) { printf("exp_ikzDz is error"); exit(0); }
 		// 4.2.3.2 WaveField multiply Phaseshift Function
 		// Compute WaveField Phaseshift
 		Wfld_r = Wfldr[Ikx] * kz[0] - Wfldi[Ikx] * kz[1];//32. WaveField Phaseshift Computing: Real Part ?
-		Wfld_i = Wfldr[Ikx] * kz[1] - Wfldi[Ikx] * kz[0];//33. WaveField Phaseshift Computing: Imagine Part ?
+		Wfld_i = Wfldr[Ikx] * kz[1] + Wfldi[Ikx] * kz[0];//33. WaveField Phaseshift Computing: Imagine Part ?
 		Wfldr[Ikx] = Wfld_r;
 		Wfldi[Ikx] = Wfld_i;
 		if (Ikx != 0 && Ikx != Nkx / 2)//34.Condition of WaveField conjugate?
 		{
-			Wfld_r = Wfldr[Ikx];//35. WaveField conjugate: Real Part ?
-			Wfld_i = -Wfldi[Ikx];//36. WaveField conjugate: Imagine Part ?
+			Wfld_r = Wfldr[Nkx-Ikx] * kz[0] - Wfldi[Nkx-Ikx] * kz[1];//35. WaveField conjugate: Real Part ?
+			Wfld_i = Wfldr[Nkx-Ikx] * kz[1] + Wfldi[Nkx-Ikx] * kz[0];//36. WaveField conjugate: Imagine Part ?
 			Wfldr[Nkx - Ikx] = Wfld_r;
 			Wfldi[Nkx - Ikx] = Wfld_i;
 		}
@@ -410,9 +411,9 @@ int Frqcy2Time()
 		for (Iw = 0; Iw < Nw / 2 + 1; Iw++)//42.The Loop scope of Storing Wave Field IN Frequency Domain ?
 		{
 			AddFrmStrt = Iw * Nx + Ix;//43.Data Number From File Head ?
-			fseek(fp_Wfldr, sizeof(fp_Wfldr) * AddFrmStrt, 0);//44.Byte number of Individual Data ?
+			fseek(fp_Wfldr, sizeof(Wfldtr[Iw]) * AddFrmStrt, 0);//44.Byte number of Individual Data ?
 			fread(&Wfldtr[Iw], sizeof(Wfldtr[Iw]), 1, fp_Wfldr); //45.Byte number of Individual Data ?
-			fseek(fp_Wfldi, sizeof(fp_Wfldi) * AddFrmStrt, 0);//46.Byte number of Individual Data ?
+			fseek(fp_Wfldi, sizeof(Wfldti[Iw]) * AddFrmStrt, 0);//46.Byte number of Individual Data ?
 			fread(&Wfldti[Iw], sizeof(Wfldti[Iw]), 1, fp_Wfldi); //47.Byte number of Individual Data ?
 			if (Iw != 0 && Iw != Nw / 2) //48.Condition of WaveField conjugate?
 			{
