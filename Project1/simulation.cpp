@@ -114,11 +114,11 @@ int Rflct()
 		for (Iz = 0; Iz < Nz; Iz++)
 		{
 			Rflct[Iz] = 0.;
-			if (Ix == Nx / 2 - 1 && Iz == Nz / 2 - 1) Rflct[Iz] = 1;
-			//if (Iz == Nz / 5 && fmod(Ix + 1, 2) == 0.) Rflct[Iz] = 1.;
-			//if (Iz == 2 * Nz / 5 && fmod(Ix + 1, 8) == 0.) Rflct[Iz] = 3.;
-			//if (Iz == 3 * Nz / 5 && fmod(Ix + 1, 16) == 0.) Rflct[Iz] = 5.;
-			//if (Iz == 4 * Nz / 5 && fmod(Ix + 1, 32) == 0.) Rflct[Iz] = 7.;
+			//if (Ix == Nx / 2 - 1 && Iz == Nz / 2 - 1) Rflct[Iz] = 1;
+			if (Iz == Nz / 5 && fmod(Ix + 1, 2) == 0.) Rflct[Iz] = 1.;
+			if (Iz == 2 * Nz / 5 && fmod(Ix + 1, 8) == 0.) Rflct[Iz] = 3.;
+			if (Iz == 3 * Nz / 5 && fmod(Ix + 1, 16) == 0.) Rflct[Iz] = 5.;
+			if (Iz == 4 * Nz / 5 && fmod(Ix + 1, 32) == 0.) Rflct[Iz] = 7.;
 			fwrite(&Rflct[Iz], sizeof(Rflct[Iz]), 1, fp_Rflct);//4.Byte Number of individual Data£¿
 		}
 	}
