@@ -117,7 +117,7 @@ int Rflct()
 			if (Iz == 2 * Nz / 5 && fmod(Ix + 1, 8) == 0.) Rflct[Iz] = 3.;
 			if (Iz == 3 * Nz / 5 && fmod(Ix + 1, 16) == 0.) Rflct[Iz] = 5.;
 			if (Iz == 4 * Nz / 5 && fmod(Ix + 1, 32) == 0.) Rflct[Iz] = 7.;
-			fwrite(&Rflct[Iz], sizeof(Rflct[Nz]), 1, fp_Rflct);//4.Byte Number of individual Data£¿
+			fwrite(&Rflct[Iz], sizeof(Rflct[Iz]), 1, fp_Rflct);//4.Byte Number of individual Data£¿
 		}
 	}
 	fclose(fp_Rflct);
@@ -211,9 +211,12 @@ int PhaseShift()
 	//function06.1.1: ReadVlctyAbsb(float *,float *);// Read in Velocity and Absorb Data
 	//function06.1.2: FrmNewWfld(FILE *,FILE *,float *,float *,float *,int,int);//Forming New Wave Field
 	//function06.1.3: MoveOneDz(float *,float *,float,float,float,int);//Wave Field Extrapolat One Detph Step
-	int ReadVlctyAbsb(float*, float*);
-	int FrmNewWfld(FILE*, FILE*, float*, float*, float*, int, int);
-	int MoveOneDz(float*, float*, float, float, float, int);
+	int ReadVlctyAbsb(float Vlcty[], float Absb[]);
+	//int ReadVlctyAbsb(float*, float*);
+	int FrmNewWfld(FILE * fp_Wfld0r, FILE * fp_Wfld0i, float Wfldr[], float Wfldi[], float Absb[], int Iz, int Iw);
+	//int FrmNewWfld(FILE*, FILE*, float*, float*, float*, int, int);
+	int MoveOneDz(float Wfldr[], float Wfldi[], float Vz, float Dkx, float Dw, int Iw);
+	//int MoveOneDz(float*, float*, float, float, float, int);
 	// 1.2 Define Varibles
 	FILE* fp_Wfldr, * fp_Wfldi, * fp_Wfld0r, * fp_Wfld0i;
 	int Ix, Iz, Iw, Nw = Nt;
@@ -288,8 +291,7 @@ int ReadVlctyAbsb(float Vlcty[], float Absb[])
 }
 ///////////////////////////////////////////////////////////
 // 06.1.2: Form New Wave Field
-int FrmNewWfld(FILE* fp_Wfld0r, FILE* fp_Wfld0i, float Wfldr[], float Wfldi[], float
-	Absb[], int Iz, int Iw)
+int FrmNewWfld(FILE* fp_Wfld0r, FILE* fp_Wfld0i, float Wfldr[], float Wfldi[], float Absb[], int Iz, int Iw)
 {
 	//function06.1.2.1 ReadIxIzIwToIwIzIx(...)
 	int ReadIxIzIwToIwIzIx(FILE * fp_Wfld0r, FILE * fp_Wfld0i, float Wfld0r[], float Wfld0i[], int
@@ -350,10 +352,8 @@ int MoveOneDz(float Wfldr[], float Wfldi[], float Vz, float Dkx, float Dw, int I
 		if (exp_ikzDz(kz, Ikx, Vz, Iw, Dw, Dkx) != 1) { printf("exp_ikzDz is error"); exit(0); }
 		// 4.2.3.2 WaveField multiply Phaseshift Function
 		// Compute WaveField Phaseshift
-		//Wfld_r = Wfldr[Ikx] * kz[0] - Wfldi[Ikx] * kz[1];//32. WaveField Phaseshift Computing: Real Part ?
+		Wfld_r = Wfldr[Ikx] * kz[0] - Wfldi[Ikx] * kz[1];//32. WaveField Phaseshift Computing: Real Part ?
 		Wfld_i = Wfldr[Ikx] * kz[1] - Wfldi[Ikx] * kz[0];//33. WaveField Phaseshift Computing: Imagine Part ?
-		//Wfld_r = 10;//32. WaveField Phaseshift Computing: Real Part ?
-		//Wfld_i = 10;//33. WaveField Phaseshift Computing: Imagine Part ?
 		Wfldr[Ikx] = Wfld_r;
 		Wfldi[Ikx] = Wfld_i;
 		if (Ikx != 0 && Ikx != Nkx / 2)//34.Condition of WaveField conjugate?
